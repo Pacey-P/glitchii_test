@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Generation</title>
+</head>
+<body>
+    <h1>Video Generation</h1>
+    <form id="prompt-form">
+        <label for="prompt">Enter a prompt:</label>
+        <input type="text" id="prompt" name="prompt" required>
+        <button type="submit">Generate Video</button>
+    </form>
+    <div id="video-container" style="display: none;">
+        <h2>Generated Video</h2>
+        <video id="video-player" width="640" height="480" controls></video>
+    </div>
+    <script>
+        document.getElementById('prompt-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const prompt = document.getElementById('prompt').value;
+            const response = await fetch(`/generate-video/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: prompt })
+            });
+            const data = await response.json();
+            const videoUrl = data.video_url;
+            const videoContainer = document.getElementById('video-container');
+            const videoPlayer = document.getElementById('video-player');
+            videoPlayer.src = videoUrl;
+            videoContainer.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
